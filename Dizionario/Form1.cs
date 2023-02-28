@@ -26,32 +26,40 @@ namespace Dizionario
                 double d = Convert.ToDouble(textBox2.Text);
                 accounts.Add(textBox1.Text, d);
                 Aggiorna();
+                textBox1.Clear();
+                textBox2.Clear();
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Inserire dati validi", "ERRORE");
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string t = listView1.SelectedItems.ToString();
+            if (listView1.SelectedItems.Count > 0)
+            {
+                for (int i = 0; i < listView1.SelectedItems.Count; i++)
+                {
+                    string s = listView1.SelectedItems[i].Text;
+                    accounts.Remove(s);
+                    Aggiorna();
+                }
+            }
+            else
+                MessageBox.Show("Prima seleziona");
+
         }
         public void Aggiorna()
         {
             listView1.Items.Clear();
-            
+            double n = 0;
             foreach (KeyValuePair<string, double> p in accounts)
             {
                 string[] row = { p.Key, p.Value.ToString() };
                 var ListViewItem = new ListViewItem(row);
-                listView1.Items.Add(ListViewItem); 
-            }
-            Dictionary<string, double>.ValueCollection ValueColl = accounts.Values;
-            double n = 0;
-            foreach (double d in ValueColl)
-            {
-                n =+ d;
+                listView1.Items.Add(ListViewItem);
+                n = n+p.Value; 
             }
             label1.Text = n.ToString();
         }
@@ -59,6 +67,24 @@ namespace Dizionario
         private void button2_Click(object sender, EventArgs e)
         {
             Aggiorna();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                for (int i = 0; i < listView1.SelectedItems.Count; i++)
+                {
+                    MessageBox.Show("Cambia i dati e premi '+' ");
+                    string s = listView1.SelectedItems[i].Text;
+                    textBox1.Text = s;
+                    textBox2.Text = accounts[s].ToString();
+                    accounts.Remove(s);
+                    Aggiorna();
+                }
+            }
+            else
+                MessageBox.Show("Prima seleziona");
         }
     }
 }
